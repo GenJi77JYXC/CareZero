@@ -1,6 +1,23 @@
 Name: careZero-gateway
+Log:
+  ServiceName: CareZero
+  Mode: console
+  Encoding: plain
+  Path: logs
+  Level: info
+  Compress: false
+  Stat: true
+  KeepDays: 7
+  MaxBackups: 0
+  Rotation: daily
 Host: localhost
 Port: 8888
+Signature:
+  Strict: false
+  Expiry: 1h
+  PrivateKeys:
+    - Fingerprint: genji77
+      KeyFile: none
 Upstreams:
   - Grpc:
       Target: localhost:8080

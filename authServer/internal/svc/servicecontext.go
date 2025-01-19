@@ -1,13 +1,54 @@
 package svc
 
-import "www.genji.xin/backend/CareZero/authServer/internal/config"
+import (
+	"fmt"
+	"github.com/zeromicro/go-zero/core/stores/redis"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
+	"time"
+	"www.genji.xin/backend/CareZero/authServer/internal/config"
+)
 
 type ServiceContext struct {
 	Config config.Config
+	DB     *gorm.DB
+	Cache  *redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+	// 初始化数据库
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", c.DatabaseCfg.User, c.DatabaseCfg.PassWord, c.DatabaseCfg.Host, c.DatabaseCfg.Port, c.DatabaseCfg.Schema)
+	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{
+		SkipDefaultTransaction: false,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable:       true, // 使用单数表名，即表名称后面没有s
+			IdentifierMaxLength: 64,
+		},
+		DryRun:                                   false, // 当=true时，生成 SQL 但不执行，可以用于准备或测试生成的 SQL
+		PrepareStmt:                              true,  // PreparedStmt 在执行任何 SQL 时都会创建一个 prepared statement 并将其缓存，以提高后续的效率
+		AllowGlobalUpdate:                        false, // 不允许在 没有指定任何条件 的情况下对整个表的数据执行更新或删除操作
+		DisableAutomaticPing:                     false, // 在完成初始化后，GORM 会自动 ping 数据库以检查数据库的可用性, 若要禁用该特性，可将其设置为 true
+		DisableForeignKeyConstraintWhenMigrating: false, // 在 AutoMigrate 或 CreateTable 时，GORM 会自动创建外键约束，若要禁用该特性，可将其设置为 true
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("mysql connect success")
+	// 初始化Redis
+	rdsConf := redis.RedisConf{
+		Host: c.Cache.Host,
+		Type: c.Cache.Type,
+		//Pass:        c.Cache.Pass,
+		//Tls:         c.Cache.Tls,
+		//NonBlock:    c.Cache.NonBlock,
+		PingTimeout: time.Second,
+	}
+	rds := redis.MustNewRedis(rdsConf)
+	fmt.Println("redis 连接成功")
 	return &ServiceContext{
 		Config: c,
+		DB:     db,
+		Cache:  rds,
 	}
 }

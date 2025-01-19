@@ -5,3 +5,13 @@ Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: authorization.rpc
+
+DatabaseCfg:
+  User: root
+  PassWord: root
+  Host: 127.0.0.1
+  Port: "7290"
+  Schema: carezero
+Cache:
+  Host: 127.0.0.1:7390
+  Type: node
