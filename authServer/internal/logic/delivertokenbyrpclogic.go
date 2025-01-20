@@ -25,6 +25,8 @@ func NewDeliverTokenByRPCLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *DeliverTokenByRPCLogic) DeliverTokenByRPC(in *auth.DeliverTokenReq) (*auth.DeliveryResp, error) {
 	// todo: add your logic here and delete this line
-
+	phone := in.Phone
+	password := in.Password
+	l.svcCtx.DB.Where()
 	return &auth.DeliveryResp{}, nil
 }

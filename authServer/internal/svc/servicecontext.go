@@ -2,18 +2,22 @@ package svc
 
 import (
 	"fmt"
+	"github.com/casbin/casbin/v2"
+	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"time"
 	"www.genji.xin/backend/CareZero/authServer/internal/config"
+	"www.genji.xin/backend/CareZero/authServer/model"
 )
 
 type ServiceContext struct {
 	Config config.Config
 	DB     *gorm.DB
 	Cache  *redis.Redis
+	Auth   *casbin.Enforcer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -34,7 +38,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("mysql connect success")
+	err = db.AutoMigrate(&model.User{})
+	if err != nil {
+		return nil
+	}
+	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
 		Host: c.Cache.Host,
@@ -46,9 +54,28 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	}
 	rds := redis.MustNewRedis(rdsConf)
 	fmt.Println("redis 连接成功")
+
+	//e, err := casbin.NewEnforcer("../config/rbac_model.conf", "../config/policy.csv")
+	//if err != nil {
+	//	panic(err)
+	//}
+	// 初始花  casbin 的适配器
+	adapter, err := gormadapter.NewAdapterByDB(db)
+	if err != nil {
+		panic(fmt.Sprintf("failed to initialize casbin adapter: %v", err))
+	}
+	// 加载模型，生成casbin执行器
+	enforcer, err := casbin.NewEnforcer("config/rbac_model.conf", adapter)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create casbin enforcer: %v", err))
+	}
+
+	fmt.Println("鉴权组件Casbin注册成功")
+
 	return &ServiceContext{
 		Config: c,
 		DB:     db,
 		Cache:  rds,
+		Auth:   enforcer,
 	}
 }
