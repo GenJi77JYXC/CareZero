@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/gateway"
 )
 
-var configFile = flag.String("f", "etc/gateway.yaml", "config file")
+var configFile = flag.String("f", "etc/gateway-dev.yaml", "config file")
 
 func main() {
 	flag.Parse()
