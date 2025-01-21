@@ -3,18 +3,11 @@ package config
 import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
+	"www.genji.xin/backend/CareZero/model"
 )
 
 type Config struct {
 	zrpc.RpcServerConf
-	DatabaseCfg DbConfig
-	Cache       redis.RedisConf
-}
-
-type DbConfig struct {
-	User     string `json:"user"`
-	PassWord string `json:"password"`
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	Schema   string `json:"schema"`
+	DatabaseCfg model.DbConfig
+	Redis       redis.RedisConf
 }

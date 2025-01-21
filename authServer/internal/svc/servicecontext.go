@@ -3,20 +3,19 @@ package svc
 import (
 	"fmt"
 	"github.com/casbin/casbin/v2"
-	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"time"
 	"www.genji.xin/backend/CareZero/authServer/internal/config"
-	"www.genji.xin/backend/CareZero/authServer/model"
+	"www.genji.xin/backend/CareZero/model"
 )
 
 type ServiceContext struct {
 	Config config.Config
 	DB     *gorm.DB
-	Cache  *redis.Redis
+	Rds    *redis.Redis
 	Auth   *casbin.Enforcer
 }
 
@@ -45,37 +44,37 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
-		Host: c.Cache.Host,
-		Type: c.Cache.Type,
-		//Pass:        c.Cache.Pass,
-		//Tls:         c.Cache.Tls,
-		//NonBlock:    c.Cache.NonBlock,
+		Host: c.Redis.Host,
+		Type: c.Redis.Type,
+		//Pass:        c.Redis.Pass,
+		//Tls:         c.Redis.Tls,
+		//NonBlock:    c.Redis.NonBlock,
 		PingTimeout: time.Second,
 	}
 	rds := redis.MustNewRedis(rdsConf)
 	fmt.Println("redis 连接成功")
 
-	//e, err := casbin.NewEnforcer("../config/rbac_model.conf", "../config/policy.csv")
-	//if err != nil {
-	//	panic(err)
-	//}
+	enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
+	if err != nil {
+		panic(err)
+	}
 	// 初始花  casbin 的适配器
-	adapter, err := gormadapter.NewAdapterByDB(db)
-	if err != nil {
-		panic(fmt.Sprintf("failed to initialize casbin adapter: %v", err))
-	}
+	//adapter, err := gormadapter.NewAdapterByDB(db)
+	//if err != nil {
+	//	panic(fmt.Sprintf("failed to initialize casbin adapter: %v", err))
+	//}
 	// 加载模型，生成casbin执行器
-	enforcer, err := casbin.NewEnforcer("config/rbac_model.conf", adapter)
-	if err != nil {
-		panic(fmt.Sprintf("failed to create casbin enforcer: %v", err))
-	}
+	//enforcer, err := casbin.NewEnforcer("config/rbac_model.conf", adapter)
+	//if err != nil {
+	//	panic(fmt.Sprintf("failed to create casbin enforcer: %v", err))
+	//}
 
 	fmt.Println("鉴权组件Casbin注册成功")
 
 	return &ServiceContext{
 		Config: c,
 		DB:     db,
-		Cache:  rds,
+		Rds:    rds,
 		Auth:   enforcer,
 	}
 }
