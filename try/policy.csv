@@ -1,0 +1,7 @@
+
+p, customer_role, user_domain, user_data, read
+p, admin_role, user_domain, user_data, write
+
+
+g, admin_role, customer_role, user_domain
+
