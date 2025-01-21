@@ -29,3 +29,14 @@ Upstreams:
       - Method: get
         Path: /ping
         RpcPath: auth.AuthService/Ping
+
+  - Grpc:
+      Target: localhost:8081
+
+    ProtoSets:
+      - user.pb
+
+    Mappings:
+      - Method: post
+        Path: /user/login
+        RpcPath: user.UserService/Login
