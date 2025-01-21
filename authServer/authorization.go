@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"www.genji.xin/backend/CareZero/authServer/middleware"
 
 	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/authServer/internal/config"
@@ -32,6 +33,7 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
+	s.AddUnaryInterceptors(middleware.AuthInterceptor)
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
