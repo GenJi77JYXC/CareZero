@@ -1,3 +1,5 @@
 protoc --descriptor_set_out=gateway/auth.pb authorization.proto
+protoc --descriptor_set_out=gateway/user.pb usercenter.proto
 
 goctl rpc protoc authorization.proto --go_out=authServer --go-grpc_out=authServer --zrpc_out=authServer
+goctl rpc protoc usercenter.proto --go_out=userServer --go-grpc_out=userServer --zrpc_out=userServer
