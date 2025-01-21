@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-
 	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/authServer/internal/svc"
 

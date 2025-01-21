@@ -3,6 +3,8 @@ module www.genji.xin/backend/CareZero
 go 1.22
 
 require (
+	github.com/casbin/casbin/v2 v2.103.0
+	github.com/casbin/gorm-adapter/v3 v3.32.0
 	github.com/zeromicro/go-zero v1.7.6
 	google.golang.org/grpc v1.69.4
 	google.golang.org/protobuf v1.36.3
@@ -15,8 +17,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.6.1 // indirect
 	github.com/bufbuild/protocompile v0.14.1 // indirect
-	github.com/casbin/casbin/v2 v2.103.0 // indirect
-	github.com/casbin/gorm-adapter/v3 v3.32.0 // indirect
 	github.com/casbin/govaluate v1.3.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
