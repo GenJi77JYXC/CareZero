@@ -8,4 +8,5 @@
 /gateway/etc/gateway-dev.yaml
 /userServer/etc/usercenter-dev.yaml
 
-
+/go.mod
+/go.sum

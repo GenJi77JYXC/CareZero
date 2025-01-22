@@ -23,3 +23,10 @@ const (
 	Read  = "read"
 	Write = "write"
 )
+
+const Salt = "suki_"
+
+const (
+	PasswordError = iota + 40001 // "密码错误"
+	UserExists                   // "用户已经存在"
+)
