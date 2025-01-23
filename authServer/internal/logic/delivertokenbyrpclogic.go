@@ -2,9 +2,9 @@ package logic
 
 import (
 	"context"
-	"time"
-	"www.genji.xin/backend/CareZero/authServer/util"
+	"gorm.io/gorm"
 	"www.genji.xin/backend/CareZero/model"
+	"www.genji.xin/backend/CareZero/utils"
 
 	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/authServer/internal/svc"
@@ -30,15 +30,18 @@ func (l *DeliverTokenByRPCLogic) DeliverTokenByRPC(in *auth.DeliverTokenReq) (*a
 	// todo: add your logic here and delete this line
 	//phone := in.Phone
 	//password := in.Password
+	user := &model.User{
+		Model: gorm.Model{ID: uint(in.UserId)},
+	}
 
-	token, err := util.GenerateToken(1, model.CustomerRole)
+	l.svcCtx.DB.First(user)
+
+	token, err := utils.GenerateToken(user.ID, user.Role, l.svcCtx.Rds)
 	if err != nil {
 		return nil, err
 	}
-	tokenExpire := time.Now().Add(time.Hour).Unix()
 
 	return &auth.DeliveryResp{
-		Token:       token,
-		TokenExpire: tokenExpire,
+		AccessToken: token,
 	}, nil
 }

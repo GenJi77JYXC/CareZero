@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	"www.genji.xin/backend/CareZero/authServer/util"
+	"www.genji.xin/backend/CareZero/utils"
 
 	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/authServer/internal/svc"
@@ -26,7 +26,7 @@ func NewVerifyTokenByRPCLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *VerifyTokenByRPCLogic) VerifyTokenByRPC(in *auth.VerifyTokenReq) (*auth.VerifyResp, error) {
 	// todo: add your logic here and delete this line
-	_, err := util.VerifyToken(in.Token)
+	_, err := utils.VerifyToken(in.Token)
 	if err != nil {
 		return nil, err
 	}
