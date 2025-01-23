@@ -44,8 +44,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
-		Host: c.Redis.Host,
-		Type: c.Redis.Type,
+		Host: c.Rds.Host,
+		Type: c.Rds.Type,
 		//Pass:        c.Redis.Pass,
 		//Tls:         c.Redis.Tls,
 		//NonBlock:    c.Redis.NonBlock,
@@ -54,10 +54,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	rds := redis.MustNewRedis(rdsConf)
 	fmt.Println("redis 连接成功")
 
-	enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
-	if err != nil {
-		panic(err)
-	}
+	//enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
+	//if err != nil {
+	//	panic(err)
+	//}
 	// 初始花  casbin 的适配器
 	//adapter, err := gormadapter.NewAdapterByDB(db)
 	//if err != nil {
@@ -69,12 +69,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//	panic(fmt.Sprintf("failed to create casbin enforcer: %v", err))
 	//}
 
-	fmt.Println("鉴权组件Casbin注册成功")
+	//fmt.Println("鉴权组件Casbin注册成功")
 
 	return &ServiceContext{
 		Config: c,
 		DB:     db,
 		Rds:    rds,
-		Auth:   enforcer,
+		//Auth:   enforcer,
 	}
 }

@@ -29,9 +29,9 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.RegisterResp, error) {
 	// todo: add your logic here and delete this line
-	if utils.VerifyEmailFormat(in.Email) {
-		return nil, errors.New(strconv.Itoa(model.EmailError))
-	}
+	//if utils.VerifyEmailFormat(in.Email) {
+	//	return nil, errors.New(strconv.Itoa(model.EmailError))
+	//}
 
 	var u model.User
 	result := l.svcCtx.DB.Where("email = ?", in.Email).First(&u)
@@ -45,5 +45,5 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.RegisterResp, erro
 	}
 	u.Password = password
 	l.svcCtx.DB.Create(&u)
-	return &user.RegisterResp{}, nil
+	return &user.RegisterResp{Res: true}, nil
 }
