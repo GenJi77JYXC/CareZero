@@ -40,3 +40,6 @@ Upstreams:
       - Method: post
         Path: /user/login
         RpcPath: user.UserService/Login
+      - Method: post
+        Path: /user/register
+        RpcPath: user.UserService/Register

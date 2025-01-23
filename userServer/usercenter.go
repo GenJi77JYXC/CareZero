@@ -16,13 +16,14 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")
+var configFile = flag.String("f", "etc/usercenter-dev.yaml", "the config file")
 
 func main() {
 	flag.Parse()
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+	fmt.Printf("%+v\n", c)
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
