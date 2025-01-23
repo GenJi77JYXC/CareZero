@@ -14,3 +14,9 @@ DatabaseCfg:
 Redis:
   Host: 127.0.0.1:7390
   Type: node
+
+RpcClientConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: authorization.rpc

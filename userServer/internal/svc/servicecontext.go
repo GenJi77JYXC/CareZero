@@ -3,18 +3,21 @@ package svc
 import (
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"time"
+	"www.genji.xin/backend/CareZero/authServer/authservice"
 	"www.genji.xin/backend/CareZero/model"
 	"www.genji.xin/backend/CareZero/userServer/internal/config"
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DB     *gorm.DB
-	Rds    *redis.Redis
+	Config  config.Config
+	DB      *gorm.DB
+	Rds     *redis.Redis
+	AuthRpc authservice.AuthService
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -54,8 +57,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	fmt.Println("redis 连接成功")
 
 	return &ServiceContext{
-		Config: c,
-		DB:     db,
-		Rds:    rds,
+		Config:  c,
+		DB:      db,
+		Rds:     rds,
+		AuthRpc: authservice.NewAuthService(zrpc.MustNewClient(c.AuthRpcConf)),
 	}
 }

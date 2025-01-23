@@ -10,4 +10,5 @@ type Config struct {
 	zrpc.RpcServerConf
 	DatabaseCfg model.DbConfig
 	Redis       redis.RedisConf
+	AuthRpcConf zrpc.RpcClientConf
 }

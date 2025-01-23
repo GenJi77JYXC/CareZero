@@ -3,10 +3,11 @@ package logic
 import (
 	"context"
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"strconv"
+	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/model"
+	"www.genji.xin/backend/CareZero/utils"
 
 	"www.genji.xin/backend/CareZero/userServer/internal/svc"
 	"www.genji.xin/backend/CareZero/userServer/user"
@@ -39,9 +40,15 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 	if result.Error != nil {
 		return &user.LoginResp{}, result.Error
 	}
-	err := bcrypt.CompareHashAndPassword([]byte(model.Salt), []byte(in.Password))
-	if err != nil {
+
+	if !utils.CompareHashAndPassword(u.Password, in.Password) {
 		return &user.LoginResp{}, errors.New(strconv.Itoa(model.PasswordError))
 	}
-	return &user.LoginResp{UserId: int32(u.ID)}, nil
+
+	res, err := l.svcCtx.AuthRpc.DeliverTokenByRPC(l.ctx, &auth.DeliverTokenReq{UserId: int32(u.ID)})
+	if err != nil {
+		return nil, err
+	}
+
+	return &user.LoginResp{AccessToken: res.AccessToken}, nil
 }
