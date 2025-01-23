@@ -46,8 +46,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
-		Host: c.Redis.Host,
-		Type: c.Redis.Type,
+		Host: c.Rds.Host,
+		Type: c.Rds.Type,
 		//Pass:        c.Redis.Pass,
 		//Tls:         c.Redis.Tls,
 		//NonBlock:    c.Redis.NonBlock,

@@ -12,6 +12,6 @@ DatabaseCfg:
   Host: 127.0.0.1
   Port: "7290"
   Schema: carezero
-Redis:
+Rds:
   Host: 127.0.0.1:7390
   Type: node
