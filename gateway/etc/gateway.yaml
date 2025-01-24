@@ -19,16 +19,16 @@ Signature:
     - Fingerprint: genji77
       KeyFile: none
 Upstreams:
-  - Grpc:
-      Target: localhost:8080
-    # protoset mode
-    ProtoSets:
-      - auth.pb
-    # Mappings can also be written in proto options
-    Mappings:
-      - Method: get
-        Path: /ping
-        RpcPath: auth.AuthService/Ping
+#  - Grpc:
+#      Target: localhost:8080
+#    # protoset mode
+#    ProtoSets:
+#      - auth.pb
+#    # Mappings can also be written in proto options
+#    Mappings:
+#      - Method: get
+#        Path: /ping
+#        RpcPath: auth.AuthService/Ping
 
   - Grpc:
       Target: localhost:8081
