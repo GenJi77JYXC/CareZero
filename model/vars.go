@@ -27,7 +27,19 @@ const (
 const Salt = "suki_"
 
 const (
-	PasswordError = iota + 40001 // "密码错误"
-	UserExists                   // "用户已经存在"
-	EmailError                   // “邮箱格式错误"
+	PasswordError        = iota + 40001 // "密码错误"
+	UserExists                          // "用户已经存在"
+	EmailError                          // “邮箱格式错误"
+	ConfirmPasswordError                // "两次密码不一致"
+	UserUnExists                        // "用户不存在"
+	TokenInvalid                        // Token失效
 )
+
+var ErrorMsg = map[int]string{
+	PasswordError:        "密码错误",
+	UserExists:           "用户已经存在",
+	EmailError:           "邮箱格式错误",
+	ConfirmPasswordError: "两次密码不一致",
+	UserUnExists:         "用户不存在",
+	TokenInvalid:         "Token失效",
+}

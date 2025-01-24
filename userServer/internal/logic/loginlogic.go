@@ -4,8 +4,7 @@ import (
 	"context"
 	"errors"
 	"gorm.io/gorm"
-	"strconv"
-	"www.genji.xin/backend/CareZero/authServer/auth"
+	"www.genji.xin/backend/CareZero/authServer/authservice"
 	"www.genji.xin/backend/CareZero/model"
 	"www.genji.xin/backend/CareZero/utils"
 
@@ -35,18 +34,19 @@ func (l *LoginLogic) Login(in *user.LoginReq) (*user.LoginResp, error) {
 	u := model.User{}
 	result := l.svcCtx.DB.Where("email = ?", in.Email).First(&u)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		return &user.LoginResp{}, gorm.ErrRecordNotFound
+		return &user.LoginResp{}, errors.New(model.ErrorMsg[model.UserUnExists])
 	}
 	if result.Error != nil {
 		return &user.LoginResp{}, result.Error
 	}
 
 	if !utils.CompareHashAndPassword(u.Password, in.Password) {
-		return &user.LoginResp{}, errors.New(strconv.Itoa(model.PasswordError))
+		return &user.LoginResp{}, errors.New(model.ErrorMsg[model.PasswordError])
 	}
 
-	res, err := l.svcCtx.AuthRpc.DeliverTokenByRPC(l.ctx, &auth.DeliverTokenReq{UserId: int32(u.ID)})
+	res, err := l.svcCtx.AuthRpc.DeliverTokenByRPC(l.ctx, &authservice.DeliverTokenReq{Id: int64(u.ID)})
 	if err != nil {
+		l.Logger.Errorf("Failed to get Token err : %v , Id:%d", err, u.ID)
 		return nil, err
 	}
 

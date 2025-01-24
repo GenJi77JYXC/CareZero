@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"errors"
-	"strconv"
 	"www.genji.xin/backend/CareZero/utils"
 
 	"www.genji.xin/backend/CareZero/model"
@@ -33,13 +32,19 @@ func (l *RegisterLogic) Register(in *user.RegisterReq) (*user.RegisterResp, erro
 	//	return nil, errors.New(strconv.Itoa(model.EmailError))
 	//}
 
-	var u model.User
-	result := l.svcCtx.DB.Where("email = ?", in.Email).First(&u)
-	if result.RowsAffected != 0 {
-		return nil, errors.New(strconv.Itoa(model.UserExists))
+	if in.Password != in.ConfirmPassword {
+		return nil, errors.New(model.ErrorMsg[model.ConfirmPasswordError])
 	}
+
+	var u model.User
+	result := l.svcCtx.DB.Where("email = ? or phone = ?", in.Email, in.Phone).First(&u)
+	if result.RowsAffected != 0 {
+		return nil, errors.New(model.ErrorMsg[model.UserExists])
+	}
+	u.Username = in.Username
 	u.Email = in.Email
-	password, err := utils.Encrypt(u.Password)
+	u.Phone = in.Phone
+	password, err := utils.Encrypt(in.Password)
 	if err != nil {
 		return nil, err
 	}
