@@ -19,7 +19,8 @@ func TestCompareHashAndPassword(t *testing.T) {
 	// $2a$10$pALp0RD/pKL7.3Zt8gHfZ.oDb5WG1v/q7KYodPbEWCqOyxxjlQQOW
 	// $2a$10$Mf5U5cMS/c3KFYG4gSjTf.iwycC00ari2zOXwnHABNiZSsQs8mTTO
 	// $2a$10$ZVD/Qcc2JcWCf1TAKJ9dhezthk4NYxsMEgd7grtU1M.e8uCNdaTwC
-	password := "$2a$10$ZVD/Qcc2JcWCf1TAKJ9dhezthk4NYxsMEgd7grtU1M.e8uCNdaTwC"
+	// $2a$10$KglYb61RmW1L3GW8FPVl1O592H6z7Ihx2Ex8MocXiMgPJ1pojzLwC
+	password := "$2a$10$bMQ/gquBUtBOREBLZ0upNeeSfviv7bEZD.hdPCPNB9a0EKh6EkAG2"
 	err := bcrypt.CompareHashAndPassword([]byte(password), []byte("1612977482"))
 	if err != nil {
 		fmt.Println(err)
