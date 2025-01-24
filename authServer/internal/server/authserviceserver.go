@@ -32,6 +32,11 @@ func (s *AuthServiceServer) VerifyTokenByRPC(ctx context.Context, in *auth.Verif
 	return l.VerifyTokenByRPC(in)
 }
 
+func (s *AuthServiceServer) RenewalTokenByRPC(ctx context.Context, in *auth.RenewalTokenReq) (*auth.RenewalTokenResp, error) {
+	l := logic.NewRenewalTokenByRPCLogic(ctx, s.svcCtx)
+	return l.RenewalTokenByRPC(in)
+}
+
 func (s *AuthServiceServer) Ping(ctx context.Context, in *auth.Request) (*auth.Response, error) {
 	l := logic.NewPingLogic(ctx, s.svcCtx)
 	return l.Ping(in)

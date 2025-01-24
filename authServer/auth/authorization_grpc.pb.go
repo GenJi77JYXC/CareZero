@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	AuthService_DeliverTokenByRPC_FullMethodName = "/auth.AuthService/DeliverTokenByRPC"
 	AuthService_VerifyTokenByRPC_FullMethodName  = "/auth.AuthService/VerifyTokenByRPC"
+	AuthService_RenewalTokenByRPC_FullMethodName = "/auth.AuthService/RenewalTokenByRPC"
 	AuthService_Ping_FullMethodName              = "/auth.AuthService/Ping"
 )
 
@@ -30,6 +31,7 @@ const (
 type AuthServiceClient interface {
 	DeliverTokenByRPC(ctx context.Context, in *DeliverTokenReq, opts ...grpc.CallOption) (*DeliveryResp, error)
 	VerifyTokenByRPC(ctx context.Context, in *VerifyTokenReq, opts ...grpc.CallOption) (*VerifyResp, error)
+	RenewalTokenByRPC(ctx context.Context, in *RenewalTokenReq, opts ...grpc.CallOption) (*RenewalTokenResp, error)
 	Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 }
 
@@ -61,6 +63,16 @@ func (c *authServiceClient) VerifyTokenByRPC(ctx context.Context, in *VerifyToke
 	return out, nil
 }
 
+func (c *authServiceClient) RenewalTokenByRPC(ctx context.Context, in *RenewalTokenReq, opts ...grpc.CallOption) (*RenewalTokenResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RenewalTokenResp)
+	err := c.cc.Invoke(ctx, AuthService_RenewalTokenByRPC_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Response)
@@ -77,6 +89,7 @@ func (c *authServiceClient) Ping(ctx context.Context, in *Request, opts ...grpc.
 type AuthServiceServer interface {
 	DeliverTokenByRPC(context.Context, *DeliverTokenReq) (*DeliveryResp, error)
 	VerifyTokenByRPC(context.Context, *VerifyTokenReq) (*VerifyResp, error)
+	RenewalTokenByRPC(context.Context, *RenewalTokenReq) (*RenewalTokenResp, error)
 	Ping(context.Context, *Request) (*Response, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -90,6 +103,9 @@ func (UnimplementedAuthServiceServer) DeliverTokenByRPC(context.Context, *Delive
 }
 func (UnimplementedAuthServiceServer) VerifyTokenByRPC(context.Context, *VerifyTokenReq) (*VerifyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyTokenByRPC not implemented")
+}
+func (UnimplementedAuthServiceServer) RenewalTokenByRPC(context.Context, *RenewalTokenReq) (*RenewalTokenResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RenewalTokenByRPC not implemented")
 }
 func (UnimplementedAuthServiceServer) Ping(context.Context, *Request) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
@@ -143,6 +159,24 @@ func _AuthService_VerifyTokenByRPC_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RenewalTokenByRPC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RenewalTokenReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RenewalTokenByRPC(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RenewalTokenByRPC_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RenewalTokenByRPC(ctx, req.(*RenewalTokenReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Request)
 	if err := dec(in); err != nil {
@@ -175,6 +209,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyTokenByRPC",
 			Handler:    _AuthService_VerifyTokenByRPC_Handler,
+		},
+		{
+			MethodName: "RenewalTokenByRPC",
+			Handler:    _AuthService_RenewalTokenByRPC_Handler,
 		},
 		{
 			MethodName: "Ping",

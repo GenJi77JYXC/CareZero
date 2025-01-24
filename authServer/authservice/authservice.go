@@ -13,16 +13,19 @@ import (
 )
 
 type (
-	DeliverTokenReq = auth.DeliverTokenReq
-	DeliveryResp    = auth.DeliveryResp
-	Request         = auth.Request
-	Response        = auth.Response
-	VerifyResp      = auth.VerifyResp
-	VerifyTokenReq  = auth.VerifyTokenReq
+	DeliverTokenReq  = auth.DeliverTokenReq
+	DeliveryResp     = auth.DeliveryResp
+	RenewalTokenReq  = auth.RenewalTokenReq
+	RenewalTokenResp = auth.RenewalTokenResp
+	Request          = auth.Request
+	Response         = auth.Response
+	VerifyResp       = auth.VerifyResp
+	VerifyTokenReq   = auth.VerifyTokenReq
 
 	AuthService interface {
 		DeliverTokenByRPC(ctx context.Context, in *DeliverTokenReq, opts ...grpc.CallOption) (*DeliveryResp, error)
 		VerifyTokenByRPC(ctx context.Context, in *VerifyTokenReq, opts ...grpc.CallOption) (*VerifyResp, error)
+		RenewalTokenByRPC(ctx context.Context, in *RenewalTokenReq, opts ...grpc.CallOption) (*RenewalTokenResp, error)
 		Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
 	}
 
@@ -45,6 +48,11 @@ func (m *defaultAuthService) DeliverTokenByRPC(ctx context.Context, in *DeliverT
 func (m *defaultAuthService) VerifyTokenByRPC(ctx context.Context, in *VerifyTokenReq, opts ...grpc.CallOption) (*VerifyResp, error) {
 	client := auth.NewAuthServiceClient(m.cli.Conn())
 	return client.VerifyTokenByRPC(ctx, in, opts...)
+}
+
+func (m *defaultAuthService) RenewalTokenByRPC(ctx context.Context, in *RenewalTokenReq, opts ...grpc.CallOption) (*RenewalTokenResp, error) {
+	client := auth.NewAuthServiceClient(m.cli.Conn())
+	return client.RenewalTokenByRPC(ctx, in, opts...)
 }
 
 func (m *defaultAuthService) Ping(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {

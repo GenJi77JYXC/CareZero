@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"www.genji.xin/backend/CareZero/authServer/auth"
 	"www.genji.xin/backend/CareZero/authServer/internal/config"
 	"www.genji.xin/backend/CareZero/authServer/internal/server"
@@ -21,9 +22,7 @@ func main() {
 	flag.Parse()
 
 	var c config.Config
-
 	conf.MustLoad(*configFile, &c)
-	fmt.Printf("%+v\n", c)
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
@@ -33,7 +32,6 @@ func main() {
 			reflection.Register(grpcServer)
 		}
 	})
-
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
