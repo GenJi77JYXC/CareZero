@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/redis"
@@ -15,9 +16,16 @@ import (
 
 const (
 	jwtSecret     = "genji11"
-	AccessExpire  = time.Hour
-	RefreshExpire = time.Hour * 144
+	AccessExpire  = 1
+	RefreshExpire = 24
 )
+
+type MyClaims struct {
+	UserId         uint   `json:"user_id"`
+	RefreshToken   string `json:"refresh_token"`
+	RefreshExpires int64  `json:"refresh_expires"`
+	jwt.RegisteredClaims
+}
 
 func GenerateToken(userId uint, rds *redis.Redis) (string, error) {
 
@@ -26,12 +34,15 @@ func GenerateToken(userId uint, rds *redis.Redis) (string, error) {
 		logx.Error("生成RefreshToken错误:", err)
 		return "", err
 	}
-	claims := jwt.MapClaims{
-		"user_id":     userId,
-		"refresh":     refreshToken,
-		"refresh_exp": time.Now().Add(RefreshExpire).Unix(),
-		"access_exp":  time.Now().Add(AccessExpire).Unix(), // 设置过期时间
+	claims := MyClaims{
+		UserId:         userId,
+		RefreshToken:   refreshToken,
+		RefreshExpires: time.Now().Add(RefreshExpire * time.Hour).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpire * time.Hour)),
+		},
 	}
+
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(jwtSecret))
 	if err != nil {
 		logx.Error("签发Token错误:", err)
@@ -47,22 +58,21 @@ func GenerateToken(userId uint, rds *redis.Redis) (string, error) {
 	return token, err
 }
 
-func VerifyToken(tokenString string) (jwt.MapClaims, error) {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+func VerifyToken(tokenString string) (*MyClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("无效的签名方法")
 		}
-		return jwtSecret, nil
+		return []byte(jwtSecret), nil
 	})
-
 	if err != nil {
+		logx.Error("校验Token时出错")
 		return nil, err
 	}
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return claims, nil
+	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid {
+		return claims, err
 	}
-	return nil, errors.New("无效的 Token")
+	return nil, errors.New("无效的Token")
 }
 
 func generateRefreshToken() (string, error) {
@@ -85,14 +95,16 @@ func storeRefreshTokenInRedis(rdb *redis.Redis, RefreshToken string, userID int6
 	if err != nil {
 		return err
 	}
+	fmt.Println("我存储了RefreshToken\n", RefreshToken)
 	return err
 }
 
 func validateRefreshToken(rdb *redis.Redis, RefreshToken string) (int, error) {
 	userID, err := rdb.Get(RefreshToken)
-	if err != nil {
+	if err != nil || userID == "" {
 		return 0, err
 	}
+
 	id, err := strconv.Atoi(userID)
 	if err != nil {
 		return 0, err
@@ -108,6 +120,12 @@ func RefreshAccessToken(rds *redis.Redis, refreshToken string) (string, error) {
 	if id == 0 {
 		return "", errors.New(model.ErrorMsg[model.TokenInvalid])
 	}
+	del, err := rds.Del(refreshToken)
+	if err != nil {
+		fmt.Println(del, "删除刷新token失败")
+		return "", err
+	}
+	fmt.Println(del, "删除刷新token")
 
 	return GenerateToken(uint(id), rds)
 }
