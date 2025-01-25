@@ -32,7 +32,7 @@ const (
 	EmailError                          // “邮箱格式错误"
 	ConfirmPasswordError                // "两次密码不一致"
 	UserUnExists                        // "用户不存在"
-	TokenInvalid                        // Token失效
+	TokenInvalid                        // 用户信息失效，请重新登录
 )
 
 var ErrorMsg = map[int]string{
@@ -41,5 +41,10 @@ var ErrorMsg = map[int]string{
 	EmailError:           "邮箱格式错误",
 	ConfirmPasswordError: "两次密码不一致",
 	UserUnExists:         "用户不存在",
-	TokenInvalid:         "Token失效",
+	TokenInvalid:         "用户信息失效，请重新登录",
 }
+
+const (
+	BlackList_AccessToken  = "blackList_accessToken:"
+	BlackList_RefreshToken = "blackList_refreshToken:"
+)

@@ -1,5 +1,7 @@
 syntax="proto3";
 
+import "google/protobuf/struct.proto";
+
 package auth;
 
 option go_package="./auth";
@@ -25,6 +27,8 @@ message DeliveryResp {
 
 message VerifyResp {
   bool res = 1;
+  google.protobuf.Struct claims = 2;
+  string msg = 3;
 }
 
 message Request {
