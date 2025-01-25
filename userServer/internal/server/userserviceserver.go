@@ -31,3 +31,18 @@ func (s *UserServiceServer) Login(ctx context.Context, in *user.LoginReq) (*user
 	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }
+
+func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *user.GetUserInfoReq) (*user.GetUserInfoResp, error) {
+	l := logic.NewGetUserInfoLogic(ctx, s.svcCtx)
+	return l.GetUserInfo(in)
+}
+
+func (s *UserServiceServer) UpdateSelfInfo(ctx context.Context, in *user.UpdateSelfInfoReq) (*user.UpdateSelfInfoRes, error) {
+	l := logic.NewUpdateSelfInfoLogic(ctx, s.svcCtx)
+	return l.UpdateSelfInfo(in)
+}
+
+func (s *UserServiceServer) Logout(ctx context.Context, in *user.LogoutReq) (*user.LogoutResp, error) {
+	l := logic.NewLogoutLogic(ctx, s.svcCtx)
+	return l.Logout(in)
+}

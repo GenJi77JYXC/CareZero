@@ -13,14 +13,23 @@ import (
 )
 
 type (
-	LoginReq     = user.LoginReq
-	LoginResp    = user.LoginResp
-	RegisterReq  = user.RegisterReq
-	RegisterResp = user.RegisterResp
+	GetUserInfoReq    = user.GetUserInfoReq
+	GetUserInfoResp   = user.GetUserInfoResp
+	LoginReq          = user.LoginReq
+	LoginResp         = user.LoginResp
+	LogoutReq         = user.LogoutReq
+	LogoutResp        = user.LogoutResp
+	RegisterReq       = user.RegisterReq
+	RegisterResp      = user.RegisterResp
+	UpdateSelfInfoReq = user.UpdateSelfInfoReq
+	UpdateSelfInfoRes = user.UpdateSelfInfoRes
 
 	UserService interface {
 		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 		Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
+		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
+		UpdateSelfInfo(ctx context.Context, in *UpdateSelfInfoReq, opts ...grpc.CallOption) (*UpdateSelfInfoRes, error)
+		Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutResp, error)
 	}
 
 	defaultUserService struct {
@@ -42,4 +51,19 @@ func (m *defaultUserService) Register(ctx context.Context, in *RegisterReq, opts
 func (m *defaultUserService) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
 	client := user.NewUserServiceClient(m.cli.Conn())
 	return client.Login(ctx, in, opts...)
+}
+
+func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.GetUserInfo(ctx, in, opts...)
+}
+
+func (m *defaultUserService) UpdateSelfInfo(ctx context.Context, in *UpdateSelfInfoReq, opts ...grpc.CallOption) (*UpdateSelfInfoRes, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.UpdateSelfInfo(ctx, in, opts...)
+}
+
+func (m *defaultUserService) Logout(ctx context.Context, in *LogoutReq, opts ...grpc.CallOption) (*LogoutResp, error) {
+	client := user.NewUserServiceClient(m.cli.Conn())
+	return client.Logout(ctx, in, opts...)
 }
