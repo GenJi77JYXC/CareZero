@@ -119,9 +119,8 @@ func RefreshAccessToken(rds *redis.Redis, refreshToken string) (string, error) {
 	if id == 0 {
 		return "", errors.New(model.ErrorMsg[model.TokenInvalid])
 	}
-	del, err := rds.Del(refreshToken)
+	_, err = rds.Del(refreshToken)
 	if err != nil {
-
 		return "", err
 	}
 
