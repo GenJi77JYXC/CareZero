@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/stores/redis"
@@ -49,7 +48,7 @@ func GenerateToken(userId uint, rds *redis.Redis) (string, error) {
 		return "", err
 	}
 
-	err = storeRefreshTokenInRedis(rds, refreshToken, int64(userId), time.Now().Add(RefreshExpire).Unix())
+	err = storeRefreshTokenInRedis(rds, refreshToken, int64(userId), time.Now().Add(RefreshExpire*time.Hour).Unix())
 	if err != nil {
 		logx.Error("存储refreshToken错误", err)
 		return "", err
@@ -95,7 +94,7 @@ func storeRefreshTokenInRedis(rdb *redis.Redis, RefreshToken string, userID int6
 	if err != nil {
 		return err
 	}
-	fmt.Println("我存储了RefreshToken\n", RefreshToken)
+
 	return err
 }
 
@@ -122,10 +121,9 @@ func RefreshAccessToken(rds *redis.Redis, refreshToken string) (string, error) {
 	}
 	del, err := rds.Del(refreshToken)
 	if err != nil {
-		fmt.Println(del, "删除刷新token失败")
+
 		return "", err
 	}
-	fmt.Println(del, "删除刷新token")
 
 	return GenerateToken(uint(id), rds)
 }
