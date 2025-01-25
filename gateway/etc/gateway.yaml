@@ -43,3 +43,12 @@ Upstreams:
       - Method: post
         Path: /user/register
         RpcPath: user.UserService/Register
+      - Method: post
+        Path: /user/logout
+        RpcPath: user.UserService/Logout
+      - Method: post
+        Path: /user/updateSelfInfo
+        RpcPath: user.UserService/UpdateSelfInfo
+      - Method: get
+        Path: /user/getUserInfo
+        RpcPath: user.UserService/GetUserInfo
