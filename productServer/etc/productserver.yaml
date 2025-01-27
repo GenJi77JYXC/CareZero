@@ -1,0 +1,25 @@
+Name: productserver.rpc
+ListenOn: 0.0.0.0:8082
+Mode: dev
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: productserver.rpc
+DatabaseCfg:
+  User: root
+  PassWord: root
+  Host: 127.0.0.1
+  Port: "7290"
+  Schema: carezero
+Rds:
+  Host: 127.0.0.1:7390
+  Type: node
+
+AuthRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: authorization.rpc
+  Endpoints:
+    - 127.0.0.1:8080
+  NonBlock: true
