@@ -7,6 +7,7 @@
 /authServer/etc/authorization-dev.yaml
 /gateway/etc/gateway-dev.yaml
 /userServer/etc/usercenter-dev.yaml
+/productServer/etc/productserver-dev.yaml
 
 /go.mod
 /go.sum
