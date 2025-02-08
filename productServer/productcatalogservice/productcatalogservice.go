@@ -22,8 +22,11 @@ type (
 	SearchProductsResp = product.SearchProductsResp
 
 	ProductCatalogService interface {
+		// 通过商品分类获取商品列表
 		ListProducts(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductsResp, error)
+		// 通过商品Id获取商品信息
 		GetProduct(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*GetProductResp, error)
+		// 通过商品名称获取商品列表
 		SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error)
 	}
 
@@ -38,16 +41,19 @@ func NewProductCatalogService(cli zrpc.Client) ProductCatalogService {
 	}
 }
 
+// 通过商品分类获取商品列表
 func (m *defaultProductCatalogService) ListProducts(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductsResp, error) {
 	client := product.NewProductCatalogServiceClient(m.cli.Conn())
 	return client.ListProducts(ctx, in, opts...)
 }
 
+// 通过商品Id获取商品信息
 func (m *defaultProductCatalogService) GetProduct(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*GetProductResp, error) {
 	client := product.NewProductCatalogServiceClient(m.cli.Conn())
 	return client.GetProduct(ctx, in, opts...)
 }
 
+// 通过商品名称获取商品列表
 func (m *defaultProductCatalogService) SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error) {
 	client := product.NewProductCatalogServiceClient(m.cli.Conn())
 	return client.SearchProducts(ctx, in, opts...)

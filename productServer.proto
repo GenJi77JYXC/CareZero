@@ -5,8 +5,11 @@ package product;
 option go_package = "./product";
 
 service ProductCatalogService {
+  // 通过商品分类获取商品列表
   rpc ListProducts(ListProductsReq) returns (ListProductsResp) {}
+  // 通过商品Id获取商品信息
   rpc GetProduct(GetProductReq) returns (GetProductResp) {}
+  // 通过商品名称获取商品列表
   rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
 }
 

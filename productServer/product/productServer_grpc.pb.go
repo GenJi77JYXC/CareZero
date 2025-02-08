@@ -28,8 +28,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductCatalogServiceClient interface {
+	// 通过商品分类获取商品列表
 	ListProducts(ctx context.Context, in *ListProductsReq, opts ...grpc.CallOption) (*ListProductsResp, error)
+	// 通过商品Id获取商品信息
 	GetProduct(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*GetProductResp, error)
+	// 通过商品名称获取商品列表
 	SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error)
 }
 
@@ -75,8 +78,11 @@ func (c *productCatalogServiceClient) SearchProducts(ctx context.Context, in *Se
 // All implementations must embed UnimplementedProductCatalogServiceServer
 // for forward compatibility
 type ProductCatalogServiceServer interface {
+	// 通过商品分类获取商品列表
 	ListProducts(context.Context, *ListProductsReq) (*ListProductsResp, error)
+	// 通过商品Id获取商品信息
 	GetProduct(context.Context, *GetProductReq) (*GetProductResp, error)
+	// 通过商品名称获取商品列表
 	SearchProducts(context.Context, *SearchProductsReq) (*SearchProductsResp, error)
 	mustEmbedUnimplementedProductCatalogServiceServer()
 }

@@ -22,16 +22,19 @@ func NewProductCatalogServiceServer(svcCtx *svc.ServiceContext) *ProductCatalogS
 	}
 }
 
+// 通过商品分类获取商品列表
 func (s *ProductCatalogServiceServer) ListProducts(ctx context.Context, in *product.ListProductsReq) (*product.ListProductsResp, error) {
 	l := logic.NewListProductsLogic(ctx, s.svcCtx)
 	return l.ListProducts(in)
 }
 
+// 通过商品Id获取商品信息
 func (s *ProductCatalogServiceServer) GetProduct(ctx context.Context, in *product.GetProductReq) (*product.GetProductResp, error) {
 	l := logic.NewGetProductLogic(ctx, s.svcCtx)
 	return l.GetProduct(in)
 }
 
+// 通过商品名称获取商品列表
 func (s *ProductCatalogServiceServer) SearchProducts(ctx context.Context, in *product.SearchProductsReq) (*product.SearchProductsResp, error) {
 	l := logic.NewSearchProductsLogic(ctx, s.svcCtx)
 	return l.SearchProducts(in)

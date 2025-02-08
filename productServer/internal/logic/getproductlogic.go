@@ -27,6 +27,7 @@ func NewGetProductLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPro
 	}
 }
 
+// GetProduct 通过商品Id获取商品信息
 func (l *GetProductLogic) GetProduct(in *product.GetProductReq) (*product.GetProductResp, error) {
 	// todo: add your logic here and delete this line
 	// 鉴权
