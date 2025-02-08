@@ -11,7 +11,59 @@ service ProductCatalogService {
   rpc GetProduct(GetProductReq) returns (GetProductResp) {}
   // 通过商品名称获取商品列表
   rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
+  // 创建商品
+  rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {}
+  // 更新商品
+  rpc UpdateProduct(UpdateProductReq) returns (UpdateProductResp) {}
+  // 删除商品
+  rpc DelProduct(DelProductReq) returns (DelProductResp) {}
 }
+message DelProductReq {
+  int64 productId = 1;
+  string access_token = 2;
+}
+
+message  DelProductResp {
+  bool res = 1;
+  string msg = 2;
+}
+
+message UpdateProductReq {
+  Product product = 1;
+  string access_token = 2;
+}
+
+message UpdateProductResp {
+  string msg = 1;
+  bool res = 2;
+}
+
+message CreateProductReq {
+  ProductBasicInfo product = 1;
+  string access_token = 2;
+}
+
+message CreateProductResp {
+  string msg = 1;
+  bool res = 2;
+}
+
+message ProductBasicInfo {
+  string name = 1;
+  string description = 2;
+  repeated string picture = 3;
+  string  sku = 4;
+  int64 stock = 5;
+  bool isActive = 6;
+  float price = 7;
+  repeated string tag = 8;
+  string createUserName = 9;
+  string updateUserName = 10;
+  string createTime = 11;
+  string updateTime = 12;
+  string category = 13;
+}
+
 
 message ListProductsReq{
   int32 page = 1;
@@ -34,6 +86,7 @@ message Product {
   string updateUserName = 11;
   string createTime = 12;
   string updateTime = 13;
+  string category = 14;
 }
 
 message ListProductsResp {

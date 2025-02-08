@@ -13,13 +13,20 @@ import (
 )
 
 type (
+	CreateProductReq   = product.CreateProductReq
+	CreateProductResp  = product.CreateProductResp
+	DelProductReq      = product.DelProductReq
+	DelProductResp     = product.DelProductResp
 	GetProductReq      = product.GetProductReq
 	GetProductResp     = product.GetProductResp
 	ListProductsReq    = product.ListProductsReq
 	ListProductsResp   = product.ListProductsResp
 	Product            = product.Product
+	ProductBasicInfo   = product.ProductBasicInfo
 	SearchProductsReq  = product.SearchProductsReq
 	SearchProductsResp = product.SearchProductsResp
+	UpdateProductReq   = product.UpdateProductReq
+	UpdateProductResp  = product.UpdateProductResp
 
 	ProductCatalogService interface {
 		// 通过商品分类获取商品列表
@@ -28,6 +35,12 @@ type (
 		GetProduct(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*GetProductResp, error)
 		// 通过商品名称获取商品列表
 		SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error)
+		// 创建商品
+		CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductResp, error)
+		// 更新商品
+		UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductResp, error)
+		// 删除商品
+		DelProduct(ctx context.Context, in *DelProductReq, opts ...grpc.CallOption) (*DelProductResp, error)
 	}
 
 	defaultProductCatalogService struct {
@@ -57,4 +70,22 @@ func (m *defaultProductCatalogService) GetProduct(ctx context.Context, in *GetPr
 func (m *defaultProductCatalogService) SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error) {
 	client := product.NewProductCatalogServiceClient(m.cli.Conn())
 	return client.SearchProducts(ctx, in, opts...)
+}
+
+// 创建商品
+func (m *defaultProductCatalogService) CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductResp, error) {
+	client := product.NewProductCatalogServiceClient(m.cli.Conn())
+	return client.CreateProduct(ctx, in, opts...)
+}
+
+// 更新商品
+func (m *defaultProductCatalogService) UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductResp, error) {
+	client := product.NewProductCatalogServiceClient(m.cli.Conn())
+	return client.UpdateProduct(ctx, in, opts...)
+}
+
+// 删除商品
+func (m *defaultProductCatalogService) DelProduct(ctx context.Context, in *DelProductReq, opts ...grpc.CallOption) (*DelProductResp, error) {
+	client := product.NewProductCatalogServiceClient(m.cli.Conn())
+	return client.DelProduct(ctx, in, opts...)
 }

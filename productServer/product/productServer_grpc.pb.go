@@ -22,6 +22,9 @@ const (
 	ProductCatalogService_ListProducts_FullMethodName   = "/product.ProductCatalogService/ListProducts"
 	ProductCatalogService_GetProduct_FullMethodName     = "/product.ProductCatalogService/GetProduct"
 	ProductCatalogService_SearchProducts_FullMethodName = "/product.ProductCatalogService/SearchProducts"
+	ProductCatalogService_CreateProduct_FullMethodName  = "/product.ProductCatalogService/CreateProduct"
+	ProductCatalogService_UpdateProduct_FullMethodName  = "/product.ProductCatalogService/UpdateProduct"
+	ProductCatalogService_DelProduct_FullMethodName     = "/product.ProductCatalogService/DelProduct"
 )
 
 // ProductCatalogServiceClient is the client API for ProductCatalogService service.
@@ -34,6 +37,12 @@ type ProductCatalogServiceClient interface {
 	GetProduct(ctx context.Context, in *GetProductReq, opts ...grpc.CallOption) (*GetProductResp, error)
 	// 通过商品名称获取商品列表
 	SearchProducts(ctx context.Context, in *SearchProductsReq, opts ...grpc.CallOption) (*SearchProductsResp, error)
+	// 创建商品
+	CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductResp, error)
+	// 更新商品
+	UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductResp, error)
+	// 删除商品
+	DelProduct(ctx context.Context, in *DelProductReq, opts ...grpc.CallOption) (*DelProductResp, error)
 }
 
 type productCatalogServiceClient struct {
@@ -74,6 +83,36 @@ func (c *productCatalogServiceClient) SearchProducts(ctx context.Context, in *Se
 	return out, nil
 }
 
+func (c *productCatalogServiceClient) CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateProductResp)
+	err := c.cc.Invoke(ctx, ProductCatalogService_CreateProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productCatalogServiceClient) UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateProductResp)
+	err := c.cc.Invoke(ctx, ProductCatalogService_UpdateProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productCatalogServiceClient) DelProduct(ctx context.Context, in *DelProductReq, opts ...grpc.CallOption) (*DelProductResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DelProductResp)
+	err := c.cc.Invoke(ctx, ProductCatalogService_DelProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductCatalogServiceServer is the server API for ProductCatalogService service.
 // All implementations must embed UnimplementedProductCatalogServiceServer
 // for forward compatibility
@@ -84,6 +123,12 @@ type ProductCatalogServiceServer interface {
 	GetProduct(context.Context, *GetProductReq) (*GetProductResp, error)
 	// 通过商品名称获取商品列表
 	SearchProducts(context.Context, *SearchProductsReq) (*SearchProductsResp, error)
+	// 创建商品
+	CreateProduct(context.Context, *CreateProductReq) (*CreateProductResp, error)
+	// 更新商品
+	UpdateProduct(context.Context, *UpdateProductReq) (*UpdateProductResp, error)
+	// 删除商品
+	DelProduct(context.Context, *DelProductReq) (*DelProductResp, error)
 	mustEmbedUnimplementedProductCatalogServiceServer()
 }
 
@@ -99,6 +144,15 @@ func (UnimplementedProductCatalogServiceServer) GetProduct(context.Context, *Get
 }
 func (UnimplementedProductCatalogServiceServer) SearchProducts(context.Context, *SearchProductsReq) (*SearchProductsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchProducts not implemented")
+}
+func (UnimplementedProductCatalogServiceServer) CreateProduct(context.Context, *CreateProductReq) (*CreateProductResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
+}
+func (UnimplementedProductCatalogServiceServer) UpdateProduct(context.Context, *UpdateProductReq) (*UpdateProductResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProduct not implemented")
+}
+func (UnimplementedProductCatalogServiceServer) DelProduct(context.Context, *DelProductReq) (*DelProductResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelProduct not implemented")
 }
 func (UnimplementedProductCatalogServiceServer) mustEmbedUnimplementedProductCatalogServiceServer() {}
 
@@ -167,6 +221,60 @@ func _ProductCatalogService_SearchProducts_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductCatalogService_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductCatalogServiceServer).CreateProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductCatalogService_CreateProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductCatalogServiceServer).CreateProduct(ctx, req.(*CreateProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductCatalogService_UpdateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductCatalogServiceServer).UpdateProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductCatalogService_UpdateProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductCatalogServiceServer).UpdateProduct(ctx, req.(*UpdateProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductCatalogService_DelProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DelProductReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductCatalogServiceServer).DelProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductCatalogService_DelProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductCatalogServiceServer).DelProduct(ctx, req.(*DelProductReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductCatalogService_ServiceDesc is the grpc.ServiceDesc for ProductCatalogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -185,6 +293,18 @@ var ProductCatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchProducts",
 			Handler:    _ProductCatalogService_SearchProducts_Handler,
+		},
+		{
+			MethodName: "CreateProduct",
+			Handler:    _ProductCatalogService_CreateProduct_Handler,
+		},
+		{
+			MethodName: "UpdateProduct",
+			Handler:    _ProductCatalogService_UpdateProduct_Handler,
+		},
+		{
+			MethodName: "DelProduct",
+			Handler:    _ProductCatalogService_DelProduct_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
