@@ -57,7 +57,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	rds := redis.MustNewRedis(rdsConf)
 	fmt.Println("redis 连接成功")
 
-	enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
+	enforcer, err := casbin.NewEnforcer("C:\\Users\\16129\\go\\src\\www.genji.xin\\backend\\CareZero\\try\\model.conf", "C:\\Users\\16129\\go\\src\\www.genji.xin\\backend\\CareZero\\try\\policy.csv")
 	if err != nil {
 		panic(err)
 	}
