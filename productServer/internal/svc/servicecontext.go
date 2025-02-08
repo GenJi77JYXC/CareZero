@@ -2,6 +2,7 @@ package svc
 
 import (
 	"fmt"
+	"github.com/casbin/casbin/v2"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/driver/mysql"
@@ -18,6 +19,7 @@ type ServiceContext struct {
 	DB      *gorm.DB
 	Rds     *redis.Redis
 	AuthRpc authservice.AuthService
+	Auth    *casbin.Enforcer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -55,10 +57,35 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	rds := redis.MustNewRedis(rdsConf)
 	fmt.Println("redis 连接成功")
 
+	enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	//初始化casbin 的适配器
+	//adapter, err := gormadapter.NewAdapterByDB(db)
+	//if err != nil {
+	//	panic(fmt.Sprintf("failed to initialize casbin adapter: %v", err))
+	//}
+	//加载模型，生成casbin执行器
+	//enforcer, err := casbin.NewEnforcer("config/rbac_model.conf", adapter)
+	//if err != nil {
+	//	panic(fmt.Sprintf("failed to create casbin enforcer: %v", err))
+	//}
+	// 从数据库加载policy
+	//err = enforcer.LoadPolicy()
+	//if err != nil {
+	//	log.Fatalf("failed to load policy: %v", err)
+	//	return nil
+	//}
+
+	fmt.Println("鉴权组件Casbin注册成功")
+
 	return &ServiceContext{
 		Config:  c,
 		DB:      db,
 		Rds:     rds,
 		AuthRpc: authservice.NewAuthService(zrpc.MustNewClient(c.AuthRpcConf)),
+		Auth:    enforcer,
 	}
 }

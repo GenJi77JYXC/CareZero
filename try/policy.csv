@@ -1,7 +1,13 @@
 
-p, customer_role, user_domain, user_data, read
-p, admin_role, user_domain, user_data, write
+p, admin, domain1, user_data, read
+p, admin, domain1, user_data, write
+p, customer, domain1, user_data, read
+p, customer, domain1, product_data, read
+p, admin, domain1, product_data, read
+p, admin, domain1, product_data, write
 
 
-g, admin_role, customer_role, user_domain
+
+g, genji, admin, domain1
+g, mercy, customer, domain1
 

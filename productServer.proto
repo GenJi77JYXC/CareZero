@@ -13,36 +13,48 @@ service ProductCatalogService {
 message ListProductsReq{
   int32 page = 1;
   int64 pageSize = 2;
-
   string categoryName = 3;
+  string access_token = 4;
 }
 
 message Product {
-  uint32 id = 1;
+  uint64 id = 1;
   string name = 2;
   string description = 3;
-  string picture = 4;
-  float price = 5;
-  repeated string categories = 6;
+  repeated string picture = 4;
+  string  sku = 5;
+  int64 stock = 6;
+  bool isActive = 7;
+  float price = 8;
+  repeated string tag = 9;
+  string createUserName = 10;
+  string updateUserName = 11;
+  string createTime = 12;
+  string updateTime = 13;
 }
 
 message ListProductsResp {
   repeated Product products = 1;
   int64 total = 2; // 商品总数
+  string msg = 3;
 }
 
 message GetProductReq {
-  uint32 id = 1;
+  uint64 id = 1;
+  string access_token = 2;
 }
 
 message GetProductResp {
   Product product = 1;
+  string msg = 2;
 }
 
 message SearchProductsReq {
   string query = 1;
+  string access_token = 2;
 }
 
 message SearchProductsResp {
   repeated Product results = 1;
+  string msg = 2;
 }
