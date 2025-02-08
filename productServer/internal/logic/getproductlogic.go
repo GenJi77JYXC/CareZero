@@ -40,7 +40,7 @@ func (l *GetProductLogic) GetProduct(in *product.GetProductReq) (*product.GetPro
 		return &product.GetProductResp{
 			Product: nil,
 			Msg:     "登录信息失效，请登录后再试",
-		}, nil
+		}, err
 	}
 	// 从Token中获取UserId
 	userId := verifyResp.Claims.Fields["user_id"].GetNumberValue()
@@ -55,13 +55,7 @@ func (l *GetProductLogic) GetProduct(in *product.GetProductReq) (*product.GetPro
 		}, sqlRes.Error
 	}
 	// 获取user的角色
-	userRoles, err := l.svcCtx.Auth.GetUsersForRole(usr.Username)
-	if err != nil {
-		return &product.GetProductResp{
-			Product: nil,
-			Msg:     "获取用户角色信息失败，请联系管理员",
-		}, err
-	}
+	userRole := l.svcCtx.Auth.GetRolesForUserInDomain(usr.Username, "domain1")
 	// resProduct 从数据库中查询到的商品信息
 	resProduct := &model.Product{}
 	result := l.svcCtx.DB.First(resProduct, in.Id)
@@ -70,7 +64,7 @@ func (l *GetProductLogic) GetProduct(in *product.GetProductReq) (*product.GetPro
 			return &product.GetProductResp{
 				Product: nil,
 				Msg:     "商品不存在",
-			}, nil
+			}, err
 		} else {
 			l.Logger.Errorf("GetProduct error:%v", result.Error)
 			return &product.GetProductResp{
@@ -91,9 +85,10 @@ func (l *GetProductLogic) GetProduct(in *product.GetProductReq) (*product.GetPro
 	productRes.IsActive = resProduct.IsActive
 	productRes.Price = resProduct.Price
 	productRes.Tag = resProduct.Tags
+	productRes.Category = resProduct.Category
 
 	// 判断user是否是Admin
-	isAdmin := utils.IsAdmin(userRoles)
+	isAdmin := utils.IsAdmin(userRole)
 	if isAdmin {
 		createUser := &model.User{Model: gorm.Model{ID: resProduct.CreatedByID}}
 		err = l.svcCtx.DB.First(&createUser).Error
