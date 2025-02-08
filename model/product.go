@@ -1,22 +1,50 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+	"gorm.io/gorm"
+)
 
 type Product struct {
 	gorm.Model
-	Name        string   `gorm:"size:255;unique;not null"` // 商品名称
-	Description string   `gorm:"type:text"`                // 商品描述
-	Picture     []string `gorm:"type:text"`                // 商品图片（JSON 数组）
-	Price       float32  `gorm:"type:decimal(10,2)"`       // 商品价格
-	Category    string   `gorm:"size:255"`                 // 商品分类
-	Stock       int      `gorm:"default:0"`                // 商品库存
-	SKU         string   `gorm:"size:100;unique;not null"` // 商品唯一编码
-	IsActive    bool     `gorm:"default:true"`             // 商品是否上架
-	CreatedByID uint     `gorm:"not null"`                 // 创建人 ID
-	UpdatedByID uint     `gorm:"not null"`                 // 更新人 ID
-	CreatedBy   User     `gorm:"foreignKey:CreatedByID"`   // 关联创建人
-	UpdatedBy   User     `gorm:"foreignKey:UpdatedByID"`   // 关联更新人
-	Tags        []string `gorm:"type:text"`                // 商品标签（JSON 数组）
+	Name        string     `gorm:"size:255;unique;not null"` // 商品名称
+	Description string     `gorm:"type:text"`                // 商品描述
+	Picture     CustomJSON `gorm:"type:json"`                // 商品图片（JSON 数组）
+	Price       float32    `gorm:"type:decimal(10,2)"`       // 商品价格
+	Category    string     `gorm:"size:255"`                 // 商品分类
+	Stock       int        `gorm:"default:0"`                // 商品库存
+	SKU         string     `gorm:"size:100;unique;not null"` // 商品唯一编码
+	IsActive    bool       `gorm:"default:true"`             // 商品是否上架
+	CreatedByID uint       `gorm:"not null"`                 // 创建人 ID
+	UpdatedByID uint       `gorm:"not null"`                 // 更新人 ID
+	CreatedBy   User       `gorm:"foreignKey:CreatedByID"`   // 关联创建人
+	UpdatedBy   User       `gorm:"foreignKey:UpdatedByID"`   // 关联更新人
+	Tags        CustomJSON `gorm:"type:json"`                // 商品标签（JSON 数组）
+}
+
+type CustomJSON []string
+
+func (j *CustomJSON) Scan(value interface{}) error {
+	if value == nil {
+		*j = []string{}
+		return nil
+	}
+	var data []byte
+	switch v := value.(type) {
+	case string:
+		data = []byte(v)
+	case []byte:
+		data = v
+	default:
+		return fmt.Errorf("unsupported type: %T", value)
+	}
+	return json.Unmarshal(data, j)
+}
+
+func (j CustomJSON) Value() (driver.Value, error) {
+	return json.Marshal(j)
 }
 
 func CreateProduct(db *gorm.DB, name string, createdByID uint, updatedByID uint) error {
