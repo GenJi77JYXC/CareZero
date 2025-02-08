@@ -40,7 +40,7 @@ func (l *ListProductsLogic) ListProducts(in *product.ListProductsReq) (*product.
 		return &product.ListProductsResp{
 			Products: nil,
 			Msg:      "登录信息失效，请登录后再试",
-		}, nil
+		}, err
 	}
 	// 从Token中获取UserId
 	userId := verifyResp.Claims.Fields["user_id"].GetNumberValue()
@@ -55,18 +55,12 @@ func (l *ListProductsLogic) ListProducts(in *product.ListProductsReq) (*product.
 		}, sqlRes.Error
 	}
 	// 获取user的角色
-	userRoles, err := l.svcCtx.Auth.GetUsersForRole(usr.Username)
-	if err != nil {
-		return &product.ListProductsResp{
-			Products: nil,
-			Msg:      "获取用户角色信息失败，请登录后再试",
-		}, err
-	}
+	userRole := l.svcCtx.Auth.GetRolesForUserInDomain(usr.Username, "domain1")
 
-	var products []*model.Product
+	var products []model.Product
 
-	err = l.svcCtx.DB.Where("category = ?", in.CategoryName).Limit(int(in.PageSize)).Offset((int(in.Page) - 1) * int(in.PageSize)).Find(products).Error
-	if err != nil {
+	result := l.svcCtx.DB.Where("category = ?", in.CategoryName).Limit(int(in.PageSize)).Offset((int(in.Page) - 1) * int(in.PageSize)).Find(&products)
+	if result.Error != nil {
 		l.Logger.Errorf("查询商品失败")
 		return nil, err
 	}
@@ -84,8 +78,9 @@ func (l *ListProductsLogic) ListProducts(in *product.ListProductsReq) (*product.
 		productResp.IsActive = val.IsActive
 		productResp.Price = val.Price
 		productResp.Tag = val.Tags
+		productResp.Category = val.Category
 		// 判断user是否是Admin
-		isAdmin := utils.IsAdmin(userRoles)
+		isAdmin := utils.IsAdmin(userRole)
 		if isAdmin {
 			createUser := &model.User{Model: gorm.Model{ID: val.CreatedByID}}
 			err = l.svcCtx.DB.First(&createUser).Error
