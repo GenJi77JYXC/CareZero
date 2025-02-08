@@ -52,3 +52,29 @@ Upstreams:
       - Method: get
         Path: /user/getUserInfo
         RpcPath: user.UserService/GetUserInfo
+
+  - Grpc:
+      Target: localhost:8082
+
+    ProtoSets:
+      - product.pb
+
+    Mappings:
+      - Method: post
+        Path: /product/getProduct
+        RpcPath: product.ProductCatalogService/GetProduct
+      - Method: post
+        Path: /product/listProducts
+        RpcPath: product.ProductCatalogService/ListProducts
+      - Method: post
+        Path: /product/searchProducts
+        RpcPath: product.ProductCatalogService/SearchProducts
+      - Method: post
+        Path: /product/createProduct
+        RpcPath: product.ProductCatalogService/CreateProduct
+      - Method: put
+        Path: /product/updateProduct
+        RpcPath: product.ProductCatalogService/UpdateProduct
+      - Method: delete
+        Path: /product/delProduct
+        RpcPath: product.ProductCatalogService/DelProduct
