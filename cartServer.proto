@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package cart;
+
+option go_package = "./cart";
+
+message CreatedCartReq {
+  string AccessToken = 1;
+}
+
+message CreatedCartResp {
+  string Msg = 1;
+}
+
+message ClearCartReq {
+  int64 CartID = 1;
+  string AccessToken = 2;
+}
+
+message  ClearCartResp {
+  string Msg = 1;
+}
+
+message GetCartInfoReq {
+  int64 CartID = 1;
+  string AccessToken = 2;
+}
+
+message GetCartInfoResp {
+  int64 CartID = 1;
+  int64 UserID = 2;
+  string CreatedAt = 3;
+  string UpdatedAt = 4;
+  repeated CartItem CartItems = 5;
+  string Msg = 6;
+}
+
+message CartItem {
+  int64 CartItemID = 1;
+  int64 ProductID = 2;
+  int64 Quantity = 3;
+}
+
+
+service CartService {
+  rpc CreatedCart(CreatedCartReq) returns (CreatedCartResp);
+  rpc ClearCart(ClearCartReq) returns (ClearCartResp);
+  rpc GetCartInfo(GetCartInfoReq) returns (GetCartInfoResp);
+}
