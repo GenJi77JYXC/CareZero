@@ -43,7 +43,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		return nil
 	}
-	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
+	fmt.Println("userServer -- mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
 		Host: c.Rds.Host,
@@ -54,7 +54,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		PingTimeout: time.Second,
 	}
 	rds := redis.MustNewRedis(rdsConf)
-	fmt.Println("redis 连接成功")
+	fmt.Println("userServer -- redis 连接成功")
+	fmt.Println("userServer配置初始化成功")
 
 	return &ServiceContext{
 		Config:  c,

@@ -44,7 +44,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		return nil
 	}
-	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
+	fmt.Println("productServer --  mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
 		Host: c.Rds.Host,
@@ -55,7 +55,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		PingTimeout: time.Second,
 	}
 	rds := redis.MustNewRedis(rdsConf)
-	fmt.Println("redis 连接成功")
+	fmt.Println("productServer -- redis 连接成功")
 
 	enforcer, err := casbin.NewEnforcer("C:\\Users\\16129\\go\\src\\www.genji.xin\\backend\\CareZero\\try\\model.conf", "C:\\Users\\16129\\go\\src\\www.genji.xin\\backend\\CareZero\\try\\policy.csv")
 	if err != nil {
@@ -79,7 +79,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//	return nil
 	//}
 
-	fmt.Println("鉴权组件Casbin注册成功")
+	fmt.Println("productServer -- 鉴权组件Casbin注册成功")
+	fmt.Println("productServer配置初始化成功")
 
 	return &ServiceContext{
 		Config:  c,

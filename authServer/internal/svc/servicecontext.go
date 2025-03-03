@@ -41,7 +41,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		return nil
 	}
-	fmt.Println("mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
+	fmt.Println("authServer -- mysql connect success, currentDatabase is ", db.Migrator().CurrentDatabase())
 	// 初始化Redis
 	rdsConf := redis.RedisConf{
 		Host: c.Rds.Host,
@@ -52,7 +52,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		PingTimeout: time.Second,
 	}
 	rds := redis.MustNewRedis(rdsConf)
-	fmt.Println("redis 连接成功")
+	fmt.Println("authServer -- redis 连接成功")
 
 	//enforcer, err := casbin.NewEnforcer("try/model.conf", "try/policy.csv")
 	//if err != nil {
@@ -70,6 +70,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//}
 
 	//fmt.Println("鉴权组件Casbin注册成功")
+
+	fmt.Println("authServer服务配置初始成功")
 
 	return &ServiceContext{
 		Config: c,

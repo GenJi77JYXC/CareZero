@@ -1,7 +1,9 @@
 protoc --descriptor_set_out=gateway/auth.pb authorization.proto
 protoc --descriptor_set_out=gateway/user.pb usercenter.proto
 protoc --descriptor_set_out=gateway/product.pb productServer.proto
+protoc --descriptor_set_out=gateway/cart.pb cartServer.proto
 
 goctl rpc protoc authorization.proto --go_out=authServer --go-grpc_out=authServer --zrpc_out=authServer
 goctl rpc protoc usercenter.proto --go_out=userServer --go-grpc_out=userServer --zrpc_out=userServer
 goctl rpc protoc productServer.proto --go_out=productServer --go-grpc_out=productServer --zrpc_out=productServer
+goctl rpc protoc cartServer.proto --go_out=cartServer --go-grpc_out=cartServer --zrpc_out=cartServer
